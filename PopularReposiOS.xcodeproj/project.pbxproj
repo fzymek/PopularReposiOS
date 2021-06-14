@@ -99,13 +99,12 @@
 		4419A1092677D7AF004B0B9E /* PopularReposiOS */ = {
 			isa = PBXGroup;
 			children = (
+				4419A13A2677D853004B0B9E /* Resources */,
 				4419A10A2677D7AF004B0B9E /* AppDelegate.swift */,
 				4419A10C2677D7AF004B0B9E /* SceneDelegate.swift */,
 				4419A10E2677D7AF004B0B9E /* ViewController.swift */,
 				4419A1102677D7AF004B0B9E /* Main.storyboard */,
-				4419A1132677D7BF004B0B9E /* Assets.xcassets */,
 				4419A1152677D7BF004B0B9E /* LaunchScreen.storyboard */,
-				4419A1182677D7BF004B0B9E /* Info.plist */,
 			);
 			path = PopularReposiOS;
 			sourceTree = "<group>";
@@ -126,6 +125,15 @@
 				4419A12E2677D7C0004B0B9E /* Info.plist */,
 			);
 			path = PopularReposiOSUITests;
+			sourceTree = "<group>";
+		};
+		4419A13A2677D853004B0B9E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4419A1132677D7BF004B0B9E /* Assets.xcassets */,
+				4419A1182677D7BF004B0B9E /* Info.plist */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -438,6 +446,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = PopularReposiOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -456,6 +465,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = PopularReposiOS/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

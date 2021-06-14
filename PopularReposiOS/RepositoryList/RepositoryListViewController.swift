@@ -17,6 +17,9 @@ class ViewController: UIViewController {
         return tableView
     }()
     
+    private lazy var httpService = HttpService()
+    private var loadingSpinner: LoadingScreen?
+    
     override func loadView() {
         let view = UIView()
         self.view = view
@@ -32,7 +35,7 @@ class ViewController: UIViewController {
         )
     }
 
-    let data = ["a", "b", "c", "d", "e", "f", "g"]
+    var data = []
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -40,6 +43,44 @@ class ViewController: UIViewController {
         repositoryTableView.register(ResultItemCell.self, forCellReuseIdentifier: String(describing: ResultItemCell.self))
         repositoryTableView.delegate = self
         repositoryTableView.dataSource = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        startLoading()
+        httpService.get(endpoint: .searchRepositories, parameters:
+                            ["q": "stars:300..310", "order": "desc", "sort":"stars"]) { (repos: RepositoriesResponseModel?, error: Error?) in
+            
+            self.stopLoading()
+            print(repos)
+            print(error)
+            if let repos = repos {
+                self.data = repos.items.map {
+                    $0.name
+                }
+                self.repositoryTableView.reloadData()
+            }
+            
+        }
+    }
+    
+    func startLoading() {
+        let loadingSpinner = LoadingScreen()
+        addChild(loadingSpinner)
+        
+        loadingSpinner.view.frame = view.frame
+        view.addSubview(loadingSpinner.view)
+        loadingSpinner.didMove(toParent: self)
+        
+        self.loadingSpinner = loadingSpinner
+    }
+    
+    func stopLoading() {
+        guard let loadingSpinner = self.loadingSpinner else { return }
+        
+        loadingSpinner.willMove(toParent: nil)
+        loadingSpinner.view.removeFromSuperview()
+        loadingSpinner.removeFromParent()
     }
 
 }

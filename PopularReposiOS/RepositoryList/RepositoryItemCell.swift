@@ -14,6 +14,8 @@ class ResultItemCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
         label.font = UIFont.preferredFont(forTextStyle: .title2)
+        label.lineBreakMode = .byCharWrapping
+        label.numberOfLines = 0
         return label
     }()
     

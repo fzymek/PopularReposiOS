@@ -18,6 +18,7 @@
 		4419A1402677F1A8004B0B9E /* HttpService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4419A13F2677F1A8004B0B9E /* HttpService.swift */; };
 		4419A1422677F633004B0B9E /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4419A1412677F633004B0B9E /* Model.swift */; };
 		4419A1442677FF50004B0B9E /* LoadingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4419A1432677FF50004B0B9E /* LoadingScreen.swift */; };
+		4419A147267804C9004B0B9E /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4419A146267804C9004B0B9E /* UIViewController+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		4419A13F2677F1A8004B0B9E /* HttpService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpService.swift; sourceTree = "<group>"; };
 		4419A1412677F633004B0B9E /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		4419A1432677FF50004B0B9E /* LoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingScreen.swift; sourceTree = "<group>"; };
+		4419A146267804C9004B0B9E /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,8 @@
 		4419A1092677D7AF004B0B9E /* PopularReposiOS */ = {
 			isa = PBXGroup;
 			children = (
+				4419A148267804E4004B0B9E /* Utilities */,
+				4419A145267804B0004B0B9E /* Extensions */,
 				4419A13E2677F183004B0B9E /* Networking */,
 				4419A13B2677EB63004B0B9E /* RepositoryList */,
 				4419A1182677D7BF004B0B9E /* Info.plist */,
@@ -148,7 +152,6 @@
 				4419A10E2677D7AF004B0B9E /* RepositoryListViewController.swift */,
 				4419A13C2677EB8C004B0B9E /* RepositoryItemCell.swift */,
 				4419A1412677F633004B0B9E /* Model.swift */,
-				4419A1432677FF50004B0B9E /* LoadingScreen.swift */,
 			);
 			path = RepositoryList;
 			sourceTree = "<group>";
@@ -159,6 +162,22 @@
 				4419A13F2677F1A8004B0B9E /* HttpService.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		4419A145267804B0004B0B9E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4419A146267804C9004B0B9E /* UIViewController+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		4419A148267804E4004B0B9E /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				4419A1432677FF50004B0B9E /* LoadingScreen.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,6 +313,7 @@
 				4419A1442677FF50004B0B9E /* LoadingScreen.swift in Sources */,
 				4419A13D2677EB8C004B0B9E /* RepositoryItemCell.swift in Sources */,
 				4419A10B2677D7AF004B0B9E /* AppDelegate.swift in Sources */,
+				4419A147267804C9004B0B9E /* UIViewController+Extensions.swift in Sources */,
 				4419A10D2677D7AF004B0B9E /* SceneDelegate.swift in Sources */,
 				4419A1422677F633004B0B9E /* Model.swift in Sources */,
 				4419A1402677F1A8004B0B9E /* HttpService.swift in Sources */,

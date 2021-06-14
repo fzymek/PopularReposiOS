@@ -30,7 +30,6 @@ class ResultItemCell: UITableViewCell {
     }
     
     private func commonInit() {
-        contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(
             [
                 contentView.topAnchor.constraint(equalTo: topAnchor),

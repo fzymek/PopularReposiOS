@@ -35,7 +35,7 @@ class ViewController: UIViewController {
         )
     }
 
-    var data = []
+    var data: [String] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -47,13 +47,13 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        startLoading()
+        showLoading()
         httpService.get(endpoint: .searchRepositories, parameters:
                             ["q": "stars:300..310", "order": "desc", "sort":"stars"]) { (repos: RepositoriesResponseModel?, error: Error?) in
             
             self.stopLoading()
-            print(repos)
-            print(error)
+//            print(repos)
+//            print(error)
             if let repos = repos {
                 self.data = repos.items.map {
                     $0.name
@@ -64,24 +64,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func startLoading() {
-        let loadingSpinner = LoadingScreen()
-        addChild(loadingSpinner)
-        
-        loadingSpinner.view.frame = view.frame
-        view.addSubview(loadingSpinner.view)
-        loadingSpinner.didMove(toParent: self)
-        
-        self.loadingSpinner = loadingSpinner
-    }
     
-    func stopLoading() {
-        guard let loadingSpinner = self.loadingSpinner else { return }
-        
-        loadingSpinner.willMove(toParent: nil)
-        loadingSpinner.view.removeFromSuperview()
-        loadingSpinner.removeFromParent()
-    }
 
 }
 

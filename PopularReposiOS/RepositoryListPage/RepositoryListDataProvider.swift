@@ -8,13 +8,14 @@
 import UIKit
 
 protocol RepositoryListDataSource {
-    func startLoading()    
+    func startLoading()
+    func item(at indexPath: IndexPath) -> RepositoryListItemViewModel?
 }
 
 class RepositoryListDataProvider: RepositoryListDataSource {
     
     weak var view: RepositoryListView?
-    var data: RepositoriesResponseModel?
+    var data: RepositorySearchResponse?
     
     var numberOfItems: Int {
         data?.items.count ?? 0
@@ -35,7 +36,7 @@ class RepositoryListDataProvider: RepositoryListDataSource {
                                 "q": "stars:300..310",
                                 "sort": "stars",
                                 "order": "desc"
-                            ]) { (resp: RepositoriesResponseModel?, error: Error?) in
+                            ]) { (resp: RepositorySearchResponse?, error: Error?) in
             self.view?.finishLoading()
             if let err = error {
                 self.view?.showError(error: err)
@@ -47,13 +48,6 @@ class RepositoryListDataProvider: RepositoryListDataSource {
                 self.view?.render()
             }
         }
-    }
-    
-    func buildViewModel(_ data: RepositoriesResponseModel) -> RepositoryListViewModel {
-        let items = data.items.map {
-            return RepositoryListItemViewModel($0)
-        }
-        return RepositoryListViewModel(items: items)
     }
     
     func item(at indexPath: IndexPath) -> RepositoryListItemViewModel? {

@@ -70,11 +70,15 @@ class RepositoryListDataProviderTests: XCTestCase {
         dataProvider = RepositoryListDataProvider(view: viewStub!)
     }
 
-    func test_shouldBuildViewModel() throws {
-        let viewModel = dataProvider!.buildViewModel(buildTestData())
+    func test_shouldReturnViewModelItem() throws {
+        let testData = buildTestData()
+        dataProvider!.data = testData
         
-        XCTAssertEqual(1, viewModel.items.count)
-        XCTAssertEqual("test", viewModel.items[0].name)
+        let indexPath = IndexPath(row: 0, section: 0)
+        let item = dataProvider?.item(at: indexPath)
+        
+        XCTAssertNotNil(item)
+        XCTAssertEqual("test", item!.name)
     }
     
     func test_shouldCallLoadingAndRenderWhenSucceded() throws {
@@ -89,11 +93,11 @@ class RepositoryListDataProviderTests: XCTestCase {
     }
 
 
-    private func buildTestData() -> RepositoriesResponseModel {
+    private func buildTestData() -> RepositorySearchResponse {
         let testItems = [
-            RepositoryModel(id: 0, name: "test", owner: OwnerModel(id: 1, login: "test login", avatarUrl: "http://test.url"), isFork: false, language: nil, starCount: 1)
+            Repository(id: 0, name: "test", owner: Owner(id: 1, login: "test login", avatarUrl: "http://test.url"), isFork: false, language: nil, starCount: 1)
         ]
-        return RepositoriesResponseModel(totalCount: 1, incompleteResults: false, items: testItems)
+        return RepositorySearchResponse(totalCount: 1, items: testItems)
     }
 
 }

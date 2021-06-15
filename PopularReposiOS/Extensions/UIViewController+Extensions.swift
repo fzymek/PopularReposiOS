@@ -26,5 +26,10 @@ extension UIViewController {
         loadingSpinner.removeFromParent()
     }
     
+    func showDefaultErrorMessage(error: Error) {
+        let alert = UIAlertController(title: "Error", message: "Unexpected error happened. Please ty again later. Details: \(error.localizedDescription)", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 

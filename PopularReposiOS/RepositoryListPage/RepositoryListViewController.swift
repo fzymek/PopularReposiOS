@@ -16,6 +16,7 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.allowsMultipleSelection = false
         return tableView
     }()
     
@@ -36,7 +37,8 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerWidgets()
+        repositoryTableView.register(RepositoryListItemCell.self,
+                                     forCellReuseIdentifier: String(describing: RepositoryListItemCell.self))
         repositoryTableView.dataSource = self
         repositoryTableView.delegate = self
     }
@@ -49,10 +51,6 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
     
     //MARK: - RepositoryListView
     
-    func registerWidgets() {
-        repositoryTableView.register(ResultItemCell.self, forCellReuseIdentifier: String(describing: ResultItemCell.self))
-    }
-    
     func renderLoading() {
         showLoading()
     }
@@ -62,9 +60,7 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
     }
     
     func showError(error: Error) {
-        let alert = UIAlertController(title: "Error", message: "Unexpected error happened. Please ty again later. Details: \(error.localizedDescription)", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        showDefaultErrorMessage(error: error)
     }
     
     func render() {
@@ -79,12 +75,12 @@ extension RepositoryListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultItemCell.self)) as? ResultItemCell,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: RepositoryListItemCell.self)) as? RepositoryListItemCell,
               let model = dataProvider?.item(at: indexPath) else {
             return UITableViewCell()
         }
         
-        cell.render(model, delegate: self)
+        cell.render(model)
         
         return cell
     }
@@ -93,10 +89,22 @@ extension RepositoryListViewController: UITableViewDataSource {
 
 extension RepositoryListViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let model = dataProvider?.item(at: indexPath) else {
+            return
+        }
+        onSelected(model)
+    }
+    
 }
 
-extension RepositoryListViewController: RepositoryListViewDelegate {
-    func onSelected() {
-        
+extension RepositoryListViewController {
+    func onSelected(_ item: RepositoryListItemViewModel) {
+        let detailVC = DetailPageViewController()
+        let provider = DetailPageDataProvider()
+        provider.initialRepositoryViewModel = item
+        provider.view = detailVC
+        detailVC.dataSource = provider
+        present(detailVC, animated: true, completion: nil)
     }
 }

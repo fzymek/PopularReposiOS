@@ -37,7 +37,8 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerWidgets()
+        repositoryTableView.register(RepositoryListItemCell.self,
+                                     forCellReuseIdentifier: String(describing: RepositoryListItemCell.self))
         repositoryTableView.dataSource = self
         repositoryTableView.delegate = self
     }
@@ -49,10 +50,6 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
     }
     
     //MARK: - RepositoryListView
-    
-    func registerWidgets() {
-        repositoryTableView.register(RepositoryListItemCell.self, forCellReuseIdentifier: String(describing: RepositoryListItemCell.self))
-    }
     
     func renderLoading() {
         showLoading()

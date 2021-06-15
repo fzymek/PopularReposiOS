@@ -8,7 +8,8 @@
 import UIKit
 
 protocol RepositoryListDataSource {
-    func startLoading()    
+    func startLoading()
+    func item(at indexPath: IndexPath) -> RepositoryListItemViewModel?
 }
 
 class RepositoryListDataProvider: RepositoryListDataSource {
@@ -47,13 +48,6 @@ class RepositoryListDataProvider: RepositoryListDataSource {
                 self.view?.render()
             }
         }
-    }
-    
-    func buildViewModel(_ data: RepositorySearchResponse) -> RepositoryListViewModel {
-        let items = data.items.map {
-            return RepositoryListItemViewModel($0)
-        }
-        return RepositoryListViewModel(items: items)
     }
     
     func item(at indexPath: IndexPath) -> RepositoryListItemViewModel? {

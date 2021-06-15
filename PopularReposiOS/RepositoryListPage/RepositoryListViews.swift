@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - List View Items
 
-protocol RepositoryListViewItem where Self: UIView {
+protocol RepositoryListViewItem: AnyObject {
     func render(_ viewModel: RepositoryListItemViewModel)
 }
 

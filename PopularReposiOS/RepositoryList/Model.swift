@@ -25,6 +25,12 @@ struct RepositoriesResponseModel: Decodable {
         self.incompleteResults = try container.decode(Bool.self, forKey: .incomplete_results)
         self.items = try container.decode([RepositoryModel].self, forKey: .items)
     }
+    
+    init(totalCount: Int, incompleteResults: Bool, items: [RepositoryModel]) {
+        self.totalCount = totalCount
+        self.incompleteResults = incompleteResults
+        self.items = items
+    }
 }
 
 struct RepositoryModel: Decodable {
@@ -53,7 +59,15 @@ struct RepositoryModel: Decodable {
         self.isFork = try container.decode(Bool.self, forKey: .fork)
         self.language = try container.decodeIfPresent(String.self, forKey: .language) ?? ""
         self.starCount = try container.decode(Int.self, forKey: .stargazers_count)
-        
+    }
+    
+    init(id: Int, name: String, owner: OwnerModel, isFork: Bool, language: String?, starCount: Int) {
+        self.id = id
+        self.name = name
+        self.owner = owner
+        self.isFork = isFork
+        self.language = language
+        self.starCount = starCount
     }
 }
 
@@ -73,5 +87,11 @@ struct OwnerModel: Decodable {
         self.id = try container.decode(Int.self, forKey: .id)
         self.login = try container.decode(String.self, forKey: .login)
         self.avatarUrl = try container.decode(String.self, forKey: .avatar_url)
+    }
+    
+    init(id: Int, login: String, avatarUrl: String) {
+        self.id = id
+        self.login = login
+        self.avatarUrl = avatarUrl
     }
 }

@@ -7,7 +7,9 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class RepositoryListViewController: UIViewController, RepositoryListView {
+    
+    var dataProvider: RepositoryListDataProvider?
     
     private let repositoryTableView: UITableView = {
         let tableView = UITableView()
@@ -16,9 +18,6 @@ class ViewController: UIViewController {
         tableView.rowHeight = UITableView.automaticDimension
         return tableView
     }()
-    
-    private lazy var httpService = HttpService()
-    private var loadingSpinner: LoadingScreen?
     
     override func loadView() {
         let view = UIView()
@@ -34,58 +33,70 @@ class ViewController: UIViewController {
             ]
         )
     }
-
-    var data: [String] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
-        repositoryTableView.register(ResultItemCell.self, forCellReuseIdentifier: String(describing: ResultItemCell.self))
-        repositoryTableView.delegate = self
+        registerWidgets()
         repositoryTableView.dataSource = self
+        repositoryTableView.delegate = self
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        showLoading()
-        httpService.get(endpoint: .searchRepositories, parameters:
-                            ["q": "stars:300..310", "order": "desc", "sort":"stars"]) { (repos: RepositoriesResponseModel?, error: Error?) in
-            
-            self.stopLoading()
-//            print(repos)
-//            print(error)
-            if let repos = repos {
-                self.data = repos.items.map {
-                    $0.name
-                }
-                self.repositoryTableView.reloadData()
-            }
-            
-        }
+        dataProvider = RepositoryListDataProvider(view: self)
+        dataProvider?.startLoading()
     }
     
+    //MARK: - RepositoryListView
     
+    func registerWidgets() {
+        repositoryTableView.register(ResultItemCell.self, forCellReuseIdentifier: String(describing: ResultItemCell.self))
+    }
+    
+    func renderLoading() {
+        showLoading()
+    }
+    
+    func finishLoading() {
+        stopLoading()
+    }
+    
+    func showError(error: Error) {
+        let alert = UIAlertController(title: "Error", message: "Unexpected error happened. Please ty again later. Details: \(error.localizedDescription)", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func render() {
+        repositoryTableView.reloadData()
+    }
 
 }
 
-extension ViewController: UITableViewDelegate {
-    
-}
-
-extension ViewController: UITableViewDataSource {
+extension RepositoryListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return dataProvider?.numberOfItems ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultItemCell.self), for: indexPath) as? ResultItemCell else {
-            return UITableViewCell(style: .default, reuseIdentifier: "")
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultItemCell.self)) as? ResultItemCell,
+              let model = dataProvider?.item(at: indexPath) else {
+            return UITableViewCell()
         }
         
-        cell.update(text: data[indexPath.row])
+        cell.render(model, delegate: self)
+        
         return cell
     }
     
+}
+
+extension RepositoryListViewController: UITableViewDelegate {
     
 }
 
+extension RepositoryListViewController: RepositoryListViewDelegate {
+    func onSelected() {
+        
+    }
+}

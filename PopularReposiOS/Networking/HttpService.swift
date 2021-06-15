@@ -15,8 +15,19 @@ enum Endpoint: String {
     case searchRepositories = "/search/repositories"
 }
 
-struct HttpService {
+enum HttpError: Error {
+    case invalidUrl
+}
+
+protocol HttpService {
+    func get<T: Decodable>(endpoint: Endpoint, parameters: [String: String], completion: @escaping (T?, Error?) -> Void)
+}
+
+struct GithubRESTService: HttpService {
+    
     let baseUrl: BaseUrl
+    
+    static let shared = GithubRESTService()
     
     init(baseUrl: BaseUrl = .githubApi) {
         self.baseUrl = baseUrl
@@ -25,7 +36,9 @@ struct HttpService {
     func get<T: Decodable>(endpoint: Endpoint, parameters: [String: String], completion: @escaping (T?, Error?) -> Void) {
         guard let url = buildUrl(with: endpoint, parameters: parameters) else {
             print("Invalid Url")
-            //todo: call completion block
+            DispatchQueue.main.async {
+                completion(nil, HttpError.invalidUrl)
+            }
             return
         }
         
@@ -33,6 +46,7 @@ struct HttpService {
         
         var request = URLRequest(url: url)
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
+        print(request)
         URLSession.shared.dataTask(with: request) {data, response, error in
             if let data = data {
                 do {

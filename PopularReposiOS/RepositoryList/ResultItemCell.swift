@@ -7,13 +7,15 @@
 
 import UIKit
 
-class ResultItemCell: UITableViewCell {
+class ResultItemCell: UITableViewCell, RepositoryListViewItem {
     
     private let text: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.adjustsFontForContentSizeCategory = true
         label.font = UIFont.preferredFont(forTextStyle: .title2)
+        label.lineBreakMode = .byCharWrapping
+        label.numberOfLines = 0
         return label
     }()
     
@@ -28,7 +30,6 @@ class ResultItemCell: UITableViewCell {
     }
     
     private func commonInit() {
-        contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate(
             [
                 contentView.topAnchor.constraint(equalTo: topAnchor),
@@ -49,7 +50,7 @@ class ResultItemCell: UITableViewCell {
         )
     }
     
-    func update(text: String) {
-        self.text.text = text
+    func render(_ viewModel: RepositoryListItemViewModel, delegate: RepositoryListViewDelegate?) {
+        self.text.text = viewModel.name
     }
 }

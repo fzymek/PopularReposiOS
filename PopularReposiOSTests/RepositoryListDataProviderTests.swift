@@ -89,11 +89,11 @@ class RepositoryListDataProviderTests: XCTestCase {
     }
 
 
-    private func buildTestData() -> RepositoriesResponseModel {
+    private func buildTestData() -> RepositorySearchResponse {
         let testItems = [
-            RepositoryModel(id: 0, name: "test", owner: OwnerModel(id: 1, login: "test login", avatarUrl: "http://test.url"), isFork: false, language: nil, starCount: 1)
+            Repository(id: 0, name: "test", owner: Owner(id: 1, login: "test login", avatarUrl: "http://test.url"), isFork: false, language: nil, starCount: 1)
         ]
-        return RepositoriesResponseModel(totalCount: 1, incompleteResults: false, items: testItems)
+        return RepositorySearchResponse(totalCount: 1, incompleteResults: false, items: testItems)
     }
 
 }

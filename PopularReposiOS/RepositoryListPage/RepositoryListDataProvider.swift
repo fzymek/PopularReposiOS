@@ -14,7 +14,7 @@ protocol RepositoryListDataSource {
 class RepositoryListDataProvider: RepositoryListDataSource {
     
     weak var view: RepositoryListView?
-    var data: RepositoriesResponseModel?
+    var data: RepositorySearchResponse?
     
     var numberOfItems: Int {
         data?.items.count ?? 0
@@ -35,7 +35,7 @@ class RepositoryListDataProvider: RepositoryListDataSource {
                                 "q": "stars:300..310",
                                 "sort": "stars",
                                 "order": "desc"
-                            ]) { (resp: RepositoriesResponseModel?, error: Error?) in
+                            ]) { (resp: RepositorySearchResponse?, error: Error?) in
             self.view?.finishLoading()
             if let err = error {
                 self.view?.showError(error: err)
@@ -49,7 +49,7 @@ class RepositoryListDataProvider: RepositoryListDataSource {
         }
     }
     
-    func buildViewModel(_ data: RepositoriesResponseModel) -> RepositoryListViewModel {
+    func buildViewModel(_ data: RepositorySearchResponse) -> RepositoryListViewModel {
         let items = data.items.map {
             return RepositoryListItemViewModel($0)
         }

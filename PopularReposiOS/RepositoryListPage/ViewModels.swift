@@ -12,9 +12,9 @@ struct RepositoryListViewModel {
 }
 
 struct RepositoryListItemViewModel {
-    private let repo: RepositoryModel
+    private let repo: Repository
     
-    init(_ repositoryModel: RepositoryModel) {
+    init(_ repositoryModel: Repository) {
         self.repo = repositoryModel
     }
 

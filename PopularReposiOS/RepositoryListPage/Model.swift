@@ -7,33 +7,29 @@
 
 import Foundation
 
-struct RepositoriesResponseModel: Decodable {
+struct RepositorySearchResponse: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case total_count
-        case incomplete_results
         case items
     }
     
     let totalCount: Int
-    let incompleteResults: Bool
-    let items: [RepositoryModel]
+    let items: [Repository]
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.totalCount = try container.decode(Int.self, forKey: .total_count)
-        self.incompleteResults = try container.decode(Bool.self, forKey: .incomplete_results)
-        self.items = try container.decode([RepositoryModel].self, forKey: .items)
+        self.items = try container.decode([Repository].self, forKey: .items)
     }
     
-    init(totalCount: Int, incompleteResults: Bool, items: [RepositoryModel]) {
+    init(totalCount: Int, items: [Repository]) {
         self.totalCount = totalCount
-        self.incompleteResults = incompleteResults
         self.items = items
     }
 }
 
-struct RepositoryModel: Decodable {
+struct Repository: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -46,7 +42,7 @@ struct RepositoryModel: Decodable {
     
     let id: Int
     let name: String
-    let owner: OwnerModel
+    let owner: Owner
     let isFork: Bool
     let language: String?
     let starCount: Int
@@ -55,13 +51,13 @@ struct RepositoryModel: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
-        self.owner = try container.decode(OwnerModel.self, forKey: .owner)
+        self.owner = try container.decode(Owner.self, forKey: .owner)
         self.isFork = try container.decode(Bool.self, forKey: .fork)
         self.language = try container.decodeIfPresent(String.self, forKey: .language) ?? ""
         self.starCount = try container.decode(Int.self, forKey: .stargazers_count)
     }
     
-    init(id: Int, name: String, owner: OwnerModel, isFork: Bool, language: String?, starCount: Int) {
+    init(id: Int, name: String, owner: Owner, isFork: Bool, language: String?, starCount: Int) {
         self.id = id
         self.name = name
         self.owner = owner
@@ -71,7 +67,7 @@ struct RepositoryModel: Decodable {
     }
 }
 
-struct OwnerModel: Decodable {
+struct Owner: Decodable {
     let id: Int
     let login: String
     let avatarUrl: String

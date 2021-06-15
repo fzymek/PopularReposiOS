@@ -21,4 +21,21 @@ struct RepositoryListItemViewModel {
     var name: String {
         repo.name
     }
+    
+    var owner: String {
+        repo.owner.login
+    }
+    
+    var numberOfStars: Int {
+        repo.starCount
+    }
+    
+    var isFork: Bool {
+        repo.isFork
+    }
+    
+    var language: String? {
+        repo.language
+    }
+        
 }

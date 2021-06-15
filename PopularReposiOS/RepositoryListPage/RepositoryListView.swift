@@ -9,12 +9,8 @@ import UIKit
 
 // MARK: - List View Items
 
-protocol RepositoryListViewDelegate {
-    func onSelected()
-}
-
 protocol RepositoryListViewItem where Self: UIView {
-    func render(_ viewModel: RepositoryListItemViewModel, delegate: RepositoryListViewDelegate?)
+    func render(_ viewModel: RepositoryListItemViewModel)
 }
 
 protocol RepositoryListView: AnyObject {

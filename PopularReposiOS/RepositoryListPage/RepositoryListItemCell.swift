@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ResultItemCell: UITableViewCell, RepositoryListViewItem {
+class RepositoryListItemCell: UITableViewCell, RepositoryListViewItem {
     
     private let text: UILabel = {
         let label = UILabel()
@@ -50,7 +50,7 @@ class ResultItemCell: UITableViewCell, RepositoryListViewItem {
         )
     }
     
-    func render(_ viewModel: RepositoryListItemViewModel, delegate: RepositoryListViewDelegate?) {
+    func render(_ viewModel: RepositoryListItemViewModel) {
         self.text.text = viewModel.name
     }
 }

@@ -16,6 +16,7 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.allowsMultipleSelection = false
         return tableView
     }()
     
@@ -50,7 +51,7 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
     //MARK: - RepositoryListView
     
     func registerWidgets() {
-        repositoryTableView.register(ResultItemCell.self, forCellReuseIdentifier: String(describing: ResultItemCell.self))
+        repositoryTableView.register(RepositoryListItemCell.self, forCellReuseIdentifier: String(describing: RepositoryListItemCell.self))
     }
     
     func renderLoading() {
@@ -79,12 +80,12 @@ extension RepositoryListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ResultItemCell.self)) as? ResultItemCell,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: RepositoryListItemCell.self)) as? RepositoryListItemCell,
               let model = dataProvider?.item(at: indexPath) else {
             return UITableViewCell()
         }
         
-        cell.render(model, delegate: self)
+        cell.render(model)
         
         return cell
     }
@@ -93,10 +94,19 @@ extension RepositoryListViewController: UITableViewDataSource {
 
 extension RepositoryListViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let model = dataProvider?.item(at: indexPath) else {
+            return
+        }
+        onSelected(model)
+    }
+    
 }
 
-extension RepositoryListViewController: RepositoryListViewDelegate {
-    func onSelected() {
-        
+extension RepositoryListViewController {
+    func onSelected(_ item: RepositoryListItemViewModel) {
+        let detailVC = DetailPageViewController()
+        detailVC.viewModel = item
+        present(detailVC, animated: true, completion: nil)
     }
 }

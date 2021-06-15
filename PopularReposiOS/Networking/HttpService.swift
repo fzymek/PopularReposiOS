@@ -11,8 +11,19 @@ enum BaseUrl: String {
     case githubApi = "https://api.github.com"
 }
 
-enum Endpoint: String {
-    case searchRepositories = "/search/repositories"
+struct Endpoint {
+    
+    private init() {
+        
+    }
+    
+    static func searchRepositiries() -> String {
+        return "/search/repositories"
+    }
+    
+    static func repositoryEndpoint(owner: String, name: String) -> String {
+        return "/repos/\(owner)/\(name)"
+    }
 }
 
 enum HttpError: Error {
@@ -20,7 +31,7 @@ enum HttpError: Error {
 }
 
 protocol HttpService {
-    func get<T: Decodable>(endpoint: Endpoint, parameters: [String: String], completion: @escaping (T?, Error?) -> Void)
+    func get<T: Decodable>(endpoint: String, parameters: [String: String], completion: @escaping (T?, Error?) -> Void) -> URLSessionDataTask?
 }
 
 struct GithubRESTService: HttpService {
@@ -33,21 +44,21 @@ struct GithubRESTService: HttpService {
         self.baseUrl = baseUrl
     }
     
-    func get<T: Decodable>(endpoint: Endpoint, parameters: [String: String], completion: @escaping (T?, Error?) -> Void) {
+    func get<T: Decodable>(endpoint: String, parameters: [String: String], completion: @escaping (T?, Error?) -> Void) -> URLSessionDataTask? {
         guard let url = buildUrl(with: endpoint, parameters: parameters) else {
             print("Invalid Url")
             DispatchQueue.main.async {
                 completion(nil, HttpError.invalidUrl)
             }
-            return
+            return nil
         }
         
         //todo: implement cache for url
         
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
         print(request)
-        URLSession.shared.dataTask(with: request) {data, response, error in
+        return URLSession.shared.dataTask(with: request) {data, response, error in
             if let data = data {
                 do {
                     let decodedResponse = try JSONDecoder().decode(T.self, from: data)
@@ -69,13 +80,12 @@ struct GithubRESTService: HttpService {
                     completion(nil, err)
                 }
             }
-        }.resume()
+        }
         
         
     }
     
-    
-    func buildUrl(with endpoint: Endpoint, parameters: [String: String]) -> URL? {
+    func buildUrl(with endpoint: String, parameters: [String: String]) -> URL? {
         guard var urlComponents = URLComponents(string: baseUrl.rawValue) else {
             return nil
         }
@@ -88,7 +98,7 @@ struct GithubRESTService: HttpService {
             return nil
         }
         
-        url.appendPathComponent(endpoint.rawValue)
+        url.appendPathComponent(endpoint)
         return url
     }
     

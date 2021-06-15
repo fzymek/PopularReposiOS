@@ -22,7 +22,11 @@ class DetailPageDataProvider: DetailPageDataSource {
     
     var initialRepositoryViewModel: RepositoryListItemViewModel?
     weak var view: DetailPageView?
+    
+    lazy var restService: HttpService = GithubRESTService.shared
     private var detailPageData: DetailPageViewModel?
+    private var updateTask: URLSessionDataTask?
+    private var timer: Timer?
     
     var data: DetailPageViewModel? {
         return detailPageData
@@ -30,27 +34,67 @@ class DetailPageDataProvider: DetailPageDataSource {
     
     func loadData() {
         view?.renderLoading()
-        guard let initialModel = initialRepositoryViewModel else {
-            view?.finishLoading()
-            view?.showError(error: DetailPageError.invalidData)
-            return
-        }
-        
-        self.detailPageData = createViewModel(from: initialModel)
-        view?.finishLoading()
-        view?.render()
-        
-    }
-    
-    func createViewModel(from repositoryViewModel: RepositoryListItemViewModel) -> DetailPageViewModel? {
-        return DetailPageViewModel(from: repositoryViewModel)
+        runUpdateTask()
     }
     
     func beginUpdates() {
+        if let _ = timer {
+            //we have timer running, do notihng
+            return
+        }
         
+        timer = Timer.scheduledTimer(timeInterval: 10,
+                                     target: self,
+                                     selector: #selector(runUpdateTask), userInfo: nil,
+                                     repeats: false)
+    }
+    
+    func beginUpdates(startOver: Bool) {
+        if startOver {
+            timer?.invalidate()
+            timer = nil
+            updateTask?.cancel()
+            updateTask = nil
+        }
+        beginUpdates()
     }
     
     func finishUpdates() {
+        if let currentTask = updateTask {
+            currentTask.cancel()
+            updateTask = nil
+        }
+        
+        if let currentTimer = timer {
+            currentTimer.invalidate()
+            timer = nil
+        }
+    }
+    
+    @objc func runUpdateTask() {
+        guard let model = initialRepositoryViewModel, updateTask == nil else {
+            //do not update in case of invalid input
+            return
+        }
+        
+        
+        self.updateTask = restService.get(endpoint: Endpoint.repositoryEndpoint(owner: model.owner, name: model.name), parameters: [:]) { (repo: Repository?, error: Error?) in
+            self.view?.finishLoading()
+            if let err = error {
+                self.view?.showError(error: err)
+                return
+            }
+            
+            if let repo = repo {
+                self.detailPageData = DetailPageViewModel(from: repo)
+                self.view?.render()
+                self.beginUpdates(startOver: true)
+            }
+        }
+        
+        self.updateTask?.resume()
+        
+
     }
     
 }

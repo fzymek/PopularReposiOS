@@ -12,6 +12,10 @@ protocol RepositoryListDataSource {
     func item(at indexPath: IndexPath) -> RepositoryListItemViewModel?
 }
 
+enum RepositoryDataProviderError: Error {
+    case unexpectedError
+}
+
 class RepositoryListDataProvider: RepositoryListDataSource {
     
     weak var view: RepositoryListView?
@@ -30,7 +34,7 @@ class RepositoryListDataProvider: RepositoryListDataSource {
     func startLoading() {
         view?.renderLoading()
         
-        restService.get(endpoint: .searchRepositories,
+        let task = restService.get(endpoint: Endpoint.searchRepositiries(),
                         parameters:
                             [
                                 "q": "stars:300..310",
@@ -48,6 +52,14 @@ class RepositoryListDataProvider: RepositoryListDataSource {
                 self.view?.render()
             }
         }
+        
+        guard let dataTask = task else {
+            view?.finishLoading()
+            view?.showError(error: RepositoryDataProviderError.unexpectedError)
+            return
+        }
+        
+        dataTask.resume()
     }
     
     func item(at indexPath: IndexPath) -> RepositoryListItemViewModel? {

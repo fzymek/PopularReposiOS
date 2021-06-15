@@ -21,4 +21,12 @@ struct DetailPageViewModel {
         self.language = "Main repository language: \(model.language ?? "Unspecified")"
         self.forkText = model.isFork ? "This repository is a fork. " : "This repository is not a fork."
     }
+    
+    init(from model: Repository) {
+        self.repositoryName = model.name
+        self.numberOfStarsText = "Current stars count: \(model.starCount)"
+        self.ownerName = "Repository owner: \(model.owner.login)"
+        self.language = "Main repository language: \(model.language ?? "Unspecified")"
+        self.forkText = model.isFork ? "This repository is a fork. " : "This repository is not a fork."
+    }
 }

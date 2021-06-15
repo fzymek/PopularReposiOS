@@ -33,7 +33,7 @@ class RepositoryListViewStub: RepositoryListView {
     }
 }
 
-struct HttpServiceStub: HttpService {
+struct HttpServiceStub: HttpService {    
     
     var errorToReturn: Error?
     var dataToReturn: Decodable?
@@ -46,7 +46,7 @@ struct HttpServiceStub: HttpService {
         self.errorToReturn = errorToReturn
     }
     
-    func get<T>(endpoint: Endpoint, parameters: [String : String], completion: @escaping (T?, Error?) -> Void) where T : Decodable {
+    func get<T>(endpoint: String, parameters: [String : String], completion: @escaping (T?, Error?) -> Void) where T : Decodable {
         
         if let err = self.errorToReturn {
             completion(nil, err)

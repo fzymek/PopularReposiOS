@@ -15,7 +15,7 @@ class RepositoryListViewStub: RepositoryListView {
     var error: Error?
     var renderCalled = false
     
-    func renderLoading() {
+    func renderLoading(isRefreshing: Bool) {
         renderLoadingCalled = true
     }
     
@@ -33,7 +33,7 @@ class RepositoryListViewStub: RepositoryListView {
     }
 }
 
-struct HttpServiceStub: HttpService {    
+struct HttpServiceStub: HttpService {
     
     var errorToReturn: Error?
     var dataToReturn: Decodable?
@@ -46,17 +46,19 @@ struct HttpServiceStub: HttpService {
         self.errorToReturn = errorToReturn
     }
     
-    func get<T>(endpoint: String, parameters: [String : String], completion: @escaping (T?, Error?) -> Void) where T : Decodable {
+    func get<T>(endpoint: String, parameters: [String : String], completion: @escaping (T?, Error?) -> Void) -> URLSessionDataTask? where T : Decodable {
         
         if let err = self.errorToReturn {
             completion(nil, err)
-            return
+            return nil
         }
         
         if let data = self.dataToReturn {
             completion(data as? T, nil)
-            return
+            return nil
         }
+        
+        return nil
     }
 }
 

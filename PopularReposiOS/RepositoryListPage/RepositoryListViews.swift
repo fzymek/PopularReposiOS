@@ -14,7 +14,7 @@ protocol RepositoryListViewItem: AnyObject {
 }
 
 protocol RepositoryListView: AnyObject {
-    func renderLoading()
+    func renderLoading(isRefreshing: Bool)
     func finishLoading()
     func showError(error: Error)
     func render()

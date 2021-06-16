@@ -20,10 +20,17 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
         return tableView
     }()
     
+    private let refreshControl: UIRefreshControl = {
+        let control = UIRefreshControl()
+        control.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
+        return control
+    }()
+    
     override func loadView() {
         let view = UIView()
         self.view = view
         
+        repositoryTableView.addSubview(refreshControl)
         view.addSubview(repositoryTableView)
         NSLayoutConstraint.activate(
             [
@@ -51,12 +58,18 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
     
     //MARK: - RepositoryListView
     
-    func renderLoading() {
-        showLoading()
+    func renderLoading(isRefreshing: Bool = false) {
+        if isRefreshing {
+            refreshControl.beginRefreshing()
+        } else {
+            showLoading()
+        }
     }
     
     func finishLoading() {
         stopLoading()
+        refreshControl.endRefreshing()
+        
     }
     
     func showError(error: Error) {
@@ -65,6 +78,12 @@ class RepositoryListViewController: UIViewController, RepositoryListView {
     
     func render() {
         repositoryTableView.reloadData()
+    }
+    
+    //MARK: - RefreshControl
+    
+    @objc func refresh(_ sender: UIRefreshControl) {
+        dataProvider?.startLoading(isRefreshing: true)
     }
 
 }

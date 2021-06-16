@@ -9,6 +9,7 @@ import UIKit
 
 protocol RepositoryListDataSource {
     func startLoading()
+    func startLoading(isRefreshing: Bool)
     func item(at indexPath: IndexPath) -> RepositoryListItemViewModel?
 }
 
@@ -31,16 +32,16 @@ class RepositoryListDataProvider: RepositoryListDataSource {
         self.view = view
     }
     
-    func startLoading() {
-        view?.renderLoading()
+    func startLoading(isRefreshing: Bool) {
+        view?.renderLoading(isRefreshing: isRefreshing)
         
         let task = restService.get(endpoint: Endpoint.searchRepositiries(),
-                        parameters:
-                            [
-                                "q": "stars:300..310",
-                                "sort": "stars",
-                                "order": "desc"
-                            ]) { (resp: RepositorySearchResponse?, error: Error?) in
+                                    parameters:
+                                        [
+                                            "q": "stars:500..510",
+                                            "sort": "stars",
+                                            "order": "desc"
+                                        ]) { (resp: RepositorySearchResponse?, error: Error?) in
             self.view?.finishLoading()
             if let err = error {
                 self.view?.showError(error: err)
@@ -60,6 +61,10 @@ class RepositoryListDataProvider: RepositoryListDataSource {
         }
         
         dataTask.resume()
+    }
+    
+    func startLoading() {
+        startLoading(isRefreshing: false)
     }
     
     func item(at indexPath: IndexPath) -> RepositoryListItemViewModel? {

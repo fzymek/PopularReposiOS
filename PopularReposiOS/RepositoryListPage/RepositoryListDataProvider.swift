@@ -38,7 +38,7 @@ class RepositoryListDataProvider: RepositoryListDataSource {
         let task = restService.get(endpoint: Endpoint.searchRepositiries(),
                                     parameters:
                                         [
-                                            "q": "stars:500..510",
+                                            "q": "stars:>0",
                                             "sort": "stars",
                                             "order": "desc"
                                         ]) { (resp: RepositorySearchResponse?, error: Error?) in

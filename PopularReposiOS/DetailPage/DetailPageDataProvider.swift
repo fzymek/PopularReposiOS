@@ -38,15 +38,12 @@ class DetailPageDataProvider: DetailPageDataSource {
     }
     
     func beginUpdates() {
-        if let _ = timer {
-            //we have timer running, do notihng
+        guard let _ = timer, let _ = updateTask else {
+            //we have timer or task running, do notihng
             return
         }
         
-        timer = Timer.scheduledTimer(timeInterval: 10,
-                                     target: self,
-                                     selector: #selector(runUpdateTask), userInfo: nil,
-                                     repeats: false)
+        configureTimer()
     }
     
     func beginUpdates(startOver: Bool) {
@@ -56,7 +53,7 @@ class DetailPageDataProvider: DetailPageDataSource {
             updateTask?.cancel()
             updateTask = nil
         }
-        beginUpdates()
+        configureTimer()
     }
     
     func finishUpdates() {
@@ -93,8 +90,13 @@ class DetailPageDataProvider: DetailPageDataSource {
         }
         
         self.updateTask?.resume()
-        
-
+    }
+    
+    private func configureTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 10,
+                                     target: self,
+                                     selector: #selector(runUpdateTask), userInfo: nil,
+                                     repeats: false)
     }
     
 }
